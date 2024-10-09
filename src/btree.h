@@ -10,6 +10,7 @@
 #include <stdint.h>
 #include <string.h>
 #include "func-common.h"
+#include "cli.h"
 #include "save.h"
 
 /************************************************************************************/
