@@ -34,8 +34,8 @@ void executeCLI() {
 		if (strcmp(userInput, "?") == 0) { // Afficher les commandes disponibles.
 			printf("\n?		Display available commands.\n");
 			printf("clear		Clear the console.\n");
-			printf("SELECT		Display existing row.		NOT WORKING YET.\n");
-			printf("INSERT		Insert a new row.		FORMAT : INSERT prenom nom\n");
+			printf("SELECT		Display existing row.		FORMAT : SELECT column1 column2 column3		FORMAT : SELECT *\n");
+			printf("INSERT		Insert a new row.		FORMAT : INSERT value1 value2\n");
 			printf("quit		Exit the program.\n\n");
 		}
 		
@@ -46,30 +46,23 @@ void executeCLI() {
 		if (strcmp(userInput, "clear") == 0) { // Effacer la console.
 			clearScreen();
 		}
-		if (strstr(userInput, "INSERT") != NULL) {
+		if (strstr(userInput, "SELECT") != NULL) { // Faire un SELECT.
+			int argNb = findCharNumberInString(userInput, ' '); // Récupérer le nombre d'espace dans la requête.
+			if(argNb < 1 || argNb > 3) { // Informer le format de la requête SI l'utilisateur ne fournis pas le bon nombre d'argument.
+				printf("FORMAT :	SELECT colonnes\n\n");
+			}
+			else {
+				selectRow(userInput, liste_personnes);
+			}
+		}
+		if (strstr(userInput, "INSERT") != NULL) { // Faire un INSERT.
 			int argNb = findCharNumberInString(userInput, ' '); // Récupérer le nombre d'espace dans la requête.
 			if(argNb != 2) { // Informer le format de la requête si l'utilisateur ne fournis pas le bon nombre d'argument.
 				printf("FORMAT :	INSERT prenom nom\n\n");
 			}
 			else {
 				liste_personnes = insertNewRow(userInput, liste_personnes);
-				
-				////////////////////////////////////////// TESTS POUR LE DEV //////////////////////////////////////////////////////////////////////////////////////
-				printf("\nStructure de l'arbre : ");
-				preOrderPrint(liste_personnes);
-				printf("\n\n");
-				if (NULL != searchNodeViaPrimaryKey(liste_personnes, 1)) {
-					stc_node *noeud = searchNodeViaPrimaryKey(liste_personnes, 1);
-					printf("Insertion du noeud numero %d\n", noeud->primaryKey);
-					printf("Insertion du prenom %s\n", noeud->row.first_name);
-					printf("Insertion du nom %s\n\n", noeud->row.last_name);
-				}
-				if (NULL != searchNodeViaPrimaryKey(liste_personnes, 2)) {
-					stc_node *noeud = searchNodeViaPrimaryKey(liste_personnes, 2);
-					printf("Insertion du noeud numero %d\n", noeud->primaryKey);
-					printf("Insertion du prenom %s\n", noeud->row.first_name);
-					printf("Insertion du nom %s\n\n", noeud->row.last_name);
-				}
+				printf("Query OK, 1 row affected\n\n");
 			}
 		}
 	}

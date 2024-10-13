@@ -144,9 +144,23 @@ void freeTree(stc_node *root) {
 /******************************/
 void preOrderPrint(stc_node *root)
 {
-    if (root != NULL) {
+    if (NULL != root) {
         printf(" %d ", root->primaryKey);
         preOrderPrint(root->leftChild);
         preOrderPrint(root->rightChild);
     }
+}
+
+/******************************/
+/****** Afficher l'arbre *****/
+/******************************/
+int countNodes(stc_node *root)
+{
+    if (NULL == root)
+        return 0;
+ 
+    int left = countNodes(root->leftChild);
+    int right = countNodes(root->rightChild);
+ 
+    return 1 + left + right;
 }
