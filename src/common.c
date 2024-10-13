@@ -23,20 +23,16 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
-#include "func-common.h"
-#include "cli.h"
-#include "btree.h"
-#include "save.h"
+#include "common.h"
 
 /************************************************************************************/
 /************************************* Fonctions ************************************/
 /************************************************************************************/
- 
+
 /***********************************/
 /***** Vider le buffer clavier *****/
 /***********************************/
-void emptyBuffer()
-{
+void emptyBuffer() {
     int c = 0;
     /* On boucle tant qu'on n'a pas récupéré le caractère \n et le symbole EOF(fin de fichier),
        qui signifient tous deux "vous êtes arrivé à la fin du buffer". */
@@ -67,16 +63,15 @@ void clearScreen() {
 /******************************************/
 /***** Récupérer la saisi utilisateur *****/
 /******************************************/
-void readString(char *chaine, int longueur)
-{
-    char *positionEntree = NULL; // Initialisation du pointeur
+void readString(char *string, int length) {
+    char *newLineCharPosition = NULL; // Initialisation du pointeur
  
-    if (fgets(chaine, longueur, stdin) != NULL)  //  Si la saisi clavier "stdin" ne retourne pas d'erreur,
+    if (fgets(string, length, stdin) != NULL)  //  Si la saisi clavier "stdin" ne retourne pas d'erreur,
     {
-        positionEntree = strchr(chaine, '\n'); // On recherche l'adresse contenant "\n" produit par l'appui sur "Entrée".
-        if (positionEntree != NULL) // Si le resultat de la recherche n'est pas NULL mais l'adresse
+        newLineCharPosition = strchr(string, '\n'); // On recherche l'adresse contenant "\n" produit par l'appui sur "Entrée".
+        if (newLineCharPosition != NULL) // Si le resultat de la recherche n'est pas NULL mais l'adresse
         {
-            *positionEntree = '\0'; // On remplace "\n" par "\0", soit la fin de chaîne.
+            *newLineCharPosition = '\0'; // On remplace "\n" par "\0", soit la fin de chaîne.
         }
         else
         {
@@ -87,4 +82,17 @@ void readString(char *chaine, int longueur)
     {
         emptyBuffer();
     }
+}
+
+/**********************************************/
+/***** Retourner le nombre d'un caractère *****/
+/**********************************************/
+uint16_t findCharNumberInString(char *string, char searchedChar) {
+	uint16_t charNb = 0;
+	for (int i = 0; i < strlen(string); i++) { // On parcourt la chaîne.
+		if (string[i] == searchedChar) { // On incrémente quand le caractère recherché est trouvé.
+			charNb += 1;
+    		}
+    	}
+    	return charNb;
 }

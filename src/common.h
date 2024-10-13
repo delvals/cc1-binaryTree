@@ -1,17 +1,12 @@
-#ifndef __FUNC_COMMON_H__
-#define __FUNC_COMMON_H__
+#ifndef __COMMON_H__
+#define __COMMON_H__
 
 /************************************************************************************/
 /********************************** Bibliothèques ***********************************/
 /************************************************************************************/
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <stdint.h>
-#include <string.h>
-#include "cli.h"
 #include "btree.h"
-#include "save.h"
 
 /************************************************************************************/
 /************************************ Structures ************************************/
@@ -29,5 +24,6 @@ typedef enum boolean {
 void emptyBuffer();
 void clearScreen();
 void readString(char *chaine, int longueur);
+uint16_t findCharNumberInString(char *string, char searchedChar);
 
 #endif
