@@ -31,7 +31,7 @@ struct row {
 /************** Noeud **************/
 /***********************************/
 struct node {
-  int primaryKey; // Clé primaire.
+  int primaryKey, height; // Clé primaire.
   stc_node *leftChild, *rightChild; // Pointeurs vers noeuds enfants.
   stc_row row; // Ligne SQL.
 };

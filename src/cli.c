@@ -10,6 +10,7 @@
 #include "cli.h"
 #include "btree.h"
 #include "query.h"
+#include "avl.h"
 
 
 /************************************************************************************/
@@ -37,6 +38,7 @@ void executeCLI() {
 			printf("SELECT		Display existing row.		FORMAT : SELECT column1 column2 column3		FORMAT : SELECT *\n");
 			printf("INSERT		Insert a new row.		FORMAT : INSERT value1 value2\n");
 			printf("DELETE		Remove existing row.		FORMAT : DELETE WHERE column1='value'		FORMAT : DELETE *\n");
+			printf("SHOW TREE	Display the binary tree.	FORMAT : SHOW TREE\n");
 			printf("quit		Exit the program.\n\n");
 		}
 		
@@ -50,7 +52,7 @@ void executeCLI() {
 		if (strstr(userInput, "SELECT") != NULL) { // Faire un SELECT.
 			int argNb = findCharNumberInString(userInput, ' '); // Récupérer le nombre d'espace dans la requête.
 			if(argNb < 1 || argNb > 3) { // Informer le format de la requête SI l'utilisateur ne fournis pas le bon nombre d'argument.
-				printf("FORMAT :	SELECT colonnes\n\n");
+				printf("\nFORMAT :	SELECT colonnes\n\n");
 			}
 			else {
 				selectRow(userInput, liste_personnes);
@@ -59,7 +61,7 @@ void executeCLI() {
 		if (strstr(userInput, "INSERT") != NULL) { // Faire un INSERT.
 			int argNb = findCharNumberInString(userInput, ' '); // Récupérer le nombre d'espace dans la requête.
 			if(argNb != 2) { // Informer le format de la requête si l'utilisateur ne fournis pas le bon nombre d'argument.
-				printf("FORMAT :	INSERT prenom nom\n\n");
+				printf("\nFORMAT :	INSERT prenom nom\n\n");
 			}
 			else {
 				liste_personnes = insertNewRow(userInput, liste_personnes);
@@ -68,11 +70,16 @@ void executeCLI() {
 		if (strstr(userInput, "DELETE") != NULL) { // Faire un DELETE.
 			int argNb = findCharNumberInString(userInput, ' '); // Récupérer le nombre d'espace dans la requête.
 			if(argNb < 1 || argNb > 2) { // Informer le format de la requête si l'utilisateur ne fournis pas le bon nombre d'argument.
-				printf("DELETE WHERE column1='value'\n\n");
+				printf("\nDELETE WHERE column1='value'\n\n");
 			}
 			else {
 				liste_personnes = deleteRow(userInput, liste_personnes);
 			}
+		}
+		if (strstr(userInput, "SHOW TREE") != NULL) { // Affiche l'arbre.
+			printf("\n");
+			preOrderPrint(liste_personnes);
+			printf("\n\n");
 		}
 	}
 }

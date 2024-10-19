@@ -9,6 +9,7 @@
 #include <stdbool.h>
 #include "btree.h"
 #include "query.h"
+#include "avl.h"
 
 
 /************************************************************************************/
@@ -39,7 +40,7 @@ stc_node *insertNewRow(char *userInput, stc_node *liste_personnes) {
 		}
 	}
 	liste_personnes = insertNode(liste_personnes, first_name, last_name); // Insérer la ligne SQL dans l'arbre.
-	printf("Query OK, 1 row affected.\n\n");
+	printf("\nQuery OK, 1 row affected.\n\n");
 	return liste_personnes;
 }
 
@@ -101,7 +102,7 @@ void selectRow(char *userInput, stc_node *liste_personnes) {
 			}
 		}
 	}
-	printf("\n%d row(s) in set\n", rowSelectedNb); // FAUT FAIRE UN COMPTEUR
+	printf("\n%d row(s) in set\n", rowSelectedNb);
 	printf("\n");
 }
 
@@ -134,7 +135,7 @@ stc_node *deleteRow(char *userInput, stc_node *liste_personnes) {
 			argument_last_name = true;
 		}
 		else {
-			printf("Query OK, 0 row affected.\n\n");
+			printf("\nQuery OK, 0 row affected.\n\n");
 			return liste_personnes;
 		}
 		
@@ -158,7 +159,7 @@ stc_node *deleteRow(char *userInput, stc_node *liste_personnes) {
 		/* Supression */
 		if ((true == argumentPrimaryKey) && (NULL != searchNodeViaPrimaryKey(liste_personnes, primaryKey))) {
 			liste_personnes = deleteNode(liste_personnes, primaryKey);
-			printf("Query OK, 1 row affected.\n\n");
+			printf("\nQuery OK, 1 row affected.\n\n");
 			return liste_personnes;
 		}
 		for (nodeCounter = 1; nodeCounter <= tableSize; nodeCounter++) { // On parcourt les noeuds de l'arbre.
@@ -182,7 +183,7 @@ stc_node *deleteRow(char *userInput, stc_node *liste_personnes) {
 		return liste_personnes;
 	}
 	else {
-		printf("Table is empty.\n");
+		printf("\nTable is empty.\n");
 		printf("Query OK, 0 row affected.\n\n");
 	}
 	return liste_personnes;

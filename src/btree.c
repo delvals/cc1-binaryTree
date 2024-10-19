@@ -7,6 +7,7 @@
 #include <stdint.h>
 #include <string.h>
 #include "btree.h"
+#include "avl.h"
 
 /************************************************************************************/
 /************************************* Fonctions ************************************/
@@ -35,6 +36,7 @@ stc_node *newNode(int value, char *first_name, char *last_name) {
 		exit(EXIT_FAILURE);
 	}
 	node->primaryKey = value; // Assignation de la clé primaire.
+	node->height = 0; // Assignation de la hauteur du noeud à 0.
 	node->leftChild = NULL; // Assignation du pointeur à NULL.
 	node->rightChild = NULL; // Assignation du pointeur à NULL.
 	strcpy(node->row.first_name, first_name); // Assignation du pointeur first_name.
@@ -53,7 +55,7 @@ stc_node *insertNode(stc_node *root, char *first_name, char *last_name) {
 	}
 
 	root = insertNodeHelper(root, primaryKeyIndex, first_name, last_name); // Utiliser la clé primaire libre.
-	
+	//root = balanceTree(root); // Equilibrage AVL de l'arbre.
     	return root; // Retourner la racine de l'arbre mise à jour.
 }
 
@@ -61,13 +63,13 @@ stc_node *insertNodeHelper(stc_node *node, int primaryKey, char *first_name, cha
 	if (node == NULL) { // SI le noeud n'existe pas...
 		return newNode(primaryKey, first_name, last_name); // ...créer et retourner le noeud.
 	}
-
 	if (primaryKey < node->primaryKey) {
 		node->leftChild = insertNodeHelper(node->leftChild, primaryKey, first_name, last_name); // Aller à gauche.
 	} else if (primaryKey > node->primaryKey) {
 		node->rightChild = insertNodeHelper(node->rightChild, primaryKey, first_name, last_name); // Aller à droite.
 	}
-	
+	node = updateNodeHeight(node); // Mettre à jour la hauteur du noeud.
+	node = balanceTree(node); // Equilibrage AVL de l'arbre.
 	return node; // Retourner le noeud actuel.
 }
 
@@ -134,7 +136,9 @@ stc_node *deleteNode(stc_node *root,int toDeleteNodePrimaryKey) {
 			root->rightChild = deleteNode(root->rightChild, temp->primaryKey); //...supprimer le noeud sucesseur.
 		}
 	}
-	return root;
+	root = updateNodeHeight(root); // Mettre à jour la hauteur du noeud.
+	root = balanceTree(root); // Equilibrage AVL de l'arbre.
+	return root; // Retourne l'arbre.
 }
 
 /******************************/
@@ -152,13 +156,13 @@ void freeTree(stc_node *root) {
 	free(root); // Libérer le noeud actuel.
 }
 
-/******************************/
-/****** Afficher l'arbre *****/
-/******************************/
+/*******************************************************************/
+/****** Afficher l'arbre en preOrder (Racine - Gauche - Droite) ****/
+/*******************************************************************/
 void preOrderPrint(stc_node *root)
 {
     if (NULL != root) {
-        printf(" %d ", root->primaryKey);
+        printf(" %d(h:%d) ", root->primaryKey, root->height);
         preOrderPrint(root->leftChild);
         preOrderPrint(root->rightChild);
     }
