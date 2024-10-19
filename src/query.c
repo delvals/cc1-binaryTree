@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
+#include <stdbool.h>
 #include "btree.h"
 #include "query.h"
 
@@ -38,6 +39,7 @@ stc_node *insertNewRow(char *userInput, stc_node *liste_personnes) {
 		}
 	}
 	liste_personnes = insertNode(liste_personnes, first_name, last_name); // Insérer la ligne SQL dans l'arbre.
+	printf("Query OK, 1 row affected.\n\n");
 	return liste_personnes;
 }
 
@@ -46,8 +48,7 @@ stc_node *insertNewRow(char *userInput, stc_node *liste_personnes) {
 /********************************/
 void selectRow(char *userInput, stc_node *liste_personnes) {
 	/***** Variables *****/
-	int tableSize = countNodes(liste_personnes);
-	int nodeCounter = 0;
+	int nodeCounter = 0, rowSelectedNb = 0, tableSize = countNodes(liste_personnes);
 	bool argumentAll = false;
 	bool argumentPrimaryKey = false;
 	bool argument_first_name = false;
@@ -76,9 +77,11 @@ void selectRow(char *userInput, stc_node *liste_personnes) {
 	}
 	/***** Afficher les résultats *****/
 	if (tableSize != 0) { // On verifie qu'il y a au moins une ligne SQL.
-		for (nodeCounter = 1; nodeCounter <= tableSize; nodeCounter++) { // On parcourt les noeuds de l'arbre.
+		int maxPrimaryKey = findNodeMaxPrimaryKey(liste_personnes)->primaryKey; // On récupère la clé primaire maximum.
+		for (nodeCounter = 1; nodeCounter <= maxPrimaryKey; nodeCounter++) { // On parcourt les noeuds de l'arbre.
 			stc_node *currentNode = searchNodeViaPrimaryKey(liste_personnes, nodeCounter); // On récupère l'adresse du noeud en cours.
 			if (NULL != currentNode) { // SI le noeud existe...
+				rowSelectedNb++;
 				if (argumentAll == true) { //...SI l'utilisateur à choisi d'afficher toutes les collones...
 					argumentAll = true;
 					printf("	%d		|	%s		|	%s		", currentNode->primaryKey, currentNode->row.first_name, currentNode->row.last_name);
@@ -98,6 +101,89 @@ void selectRow(char *userInput, stc_node *liste_personnes) {
 			}
 		}
 	}
-	printf("\n%d row(s) in set\n", tableSize);
+	printf("\n%d row(s) in set\n", rowSelectedNb); // FAUT FAIRE UN COMPTEUR
 	printf("\n");
+}
+
+/********************************/
+/***** Supprimer lignes SQL  ****/
+/********************************/
+stc_node *deleteRow(char *userInput, stc_node *liste_personnes) {
+	/***** Variables *****/
+	int tableSize = countNodes(liste_personnes);
+	int nodeCounter = 1, position = 0, rowDeletedNb = 0, conditionPosition = 0, primaryKey = 0;
+	uint8_t singleQuoteNb = 0;
+	char condition[50] = "";
+	bool argumentAll = false;
+	bool argumentPrimaryKey = false;
+	bool argument_first_name = false;
+	bool argument_last_name = false;
+	/***** Fonctions *****/
+	if (tableSize != 0) { // On verifie qu'il y a au moins une ligne SQL.
+		/* Analyse de la condition */
+		if (strstr(userInput, "*") != NULL) { // SI l'utilisateur veut supprimer toutes les données...
+			argumentAll = true;
+		}
+		else if ((strstr(userInput, "WHERE") != NULL) && (strstr(userInput, "primaryKey") != NULL)) { // SI l'utilisateur veut supprimer selon la valeur d'une clé primaire...
+			argumentPrimaryKey = true;
+		}
+		else if ((strstr(userInput, "WHERE") != NULL) && (strstr(userInput, "first_name") != NULL)) { // SI l'utilisateur veut supprimer selon la valeur d'un prénom...
+			argument_first_name = true;
+		}
+		else if ((strstr(userInput, "WHERE") != NULL) && (strstr(userInput, "last_name") != NULL)) { // SI l'utilisateur veut supprimer selon la valeur d'un nom...
+			argument_last_name = true;
+		}
+		else {
+			printf("Query OK, 0 row affected.\n\n");
+			return liste_personnes;
+		}
+		
+		/* Récupération de la condition */
+		for (position = 0; position < strlen(userInput); position++) { // On parcourt les caractères dans la saisi utilisateur.
+			if (singleQuoteNb == 1) { // La valeur à récupéré se trouve entre deux guillements simples.
+				condition[conditionPosition] = userInput[position]; // On récupère la valeur dans une variable.
+				conditionPosition += 1;
+			}
+			if (userInput[position] == '\'') { // Lorsqu'il y a un guillement simple, on incrémente le compteur.
+				singleQuoteNb += 1;
+			}
+		}
+		condition[strlen(condition) - 1] = '\0'; // Supression du deuxième guillement simple.
+		
+		/* Conversion */
+		if (true == argumentPrimaryKey) { // SI l'utilisateur veut supprimer selon la valeur d'une clé primaire...
+			primaryKey = atoi(condition); // ...on convertit en entier la condition.
+		}
+		
+		/* Supression */
+		if ((true == argumentPrimaryKey) && (NULL != searchNodeViaPrimaryKey(liste_personnes, primaryKey))) {
+			liste_personnes = deleteNode(liste_personnes, primaryKey);
+			printf("Query OK, 1 row affected.\n\n");
+			return liste_personnes;
+		}
+		for (nodeCounter = 1; nodeCounter <= tableSize; nodeCounter++) { // On parcourt les noeuds de l'arbre.
+			stc_node *currentNode = searchNodeViaPrimaryKey(liste_personnes, nodeCounter); // On récupère l'adresse du noeud en cours.
+			if (NULL != currentNode) { // SI le noeud existe...
+				if (argumentAll == true) { // SI l'utilisateur veut supprimer selon la valeur d'un prénom et la condition est remplie...
+					liste_personnes = deleteNode(liste_personnes, nodeCounter); //...supprimer le noeud actuel.
+					rowDeletedNb++; //...le compteur de lignes supprimées s'incrémente.
+				}
+				else if ((argument_first_name == true) && (strcmp(currentNode->row.first_name,condition) == 0)) { // SI l'utilisateur veut supprimer selon la valeur d'un prénom et la condition est remplie...
+					liste_personnes = deleteNode(liste_personnes, nodeCounter); //...supprimer le noeud actuel.
+					rowDeletedNb++; //...le compteur de lignes supprimées s'incrémente.
+				}
+				else if ((argument_last_name == true) && (strcmp(currentNode->row.last_name,condition) == 0)) { // SI l'utilisateur veut supprimer selon la valeur d'un prénom et la condition est remplie...
+					liste_personnes = deleteNode(liste_personnes, nodeCounter); //...supprimer le noeud actuel.
+					rowDeletedNb++; //...le compteur de lignes supprimées s'incrémente.
+				}
+			}
+		}
+		printf("Query OK, %d row(s) affected.\n\n", rowDeletedNb);
+		return liste_personnes;
+	}
+	else {
+		printf("Table is empty.\n");
+		printf("Query OK, 0 row affected.\n\n");
+	}
+	return liste_personnes;
 }

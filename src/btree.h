@@ -45,6 +45,7 @@ stc_node *newNode(int value, char *first_name, char *last_name);
 stc_node *insertNode(stc_node *root, char *first_name, char *last_name);
 stc_node *insertNodeHelper(stc_node *node, int primaryKey, char *first_name, char *last_name);
 stc_node *findNodeMinPrimaryKey(stc_node *root);
+stc_node *findNodeMaxPrimaryKey(stc_node *root);
 stc_node *deleteNode(stc_node *root,int toDeleteNodePrimaryKey);
 void freeTree(stc_node *root);
 void preOrderPrint(stc_node *root);

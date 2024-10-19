@@ -27,7 +27,7 @@ void executeCLI() {
 	clearScreen(); // Effacer la console.
 	printf("Use '?' to display available commands.\n\n"); // Afficher le message d'aide.
 	
-	while (1 == 1) { // Boucle infini.
+	while (1) { // Boucle infini.
 	printf("binaryTree > "); // Prompt.
 		readString(userInput, 200); // Récupérer la saisi utilisateur.
 		
@@ -36,6 +36,7 @@ void executeCLI() {
 			printf("clear		Clear the console.\n");
 			printf("SELECT		Display existing row.		FORMAT : SELECT column1 column2 column3		FORMAT : SELECT *\n");
 			printf("INSERT		Insert a new row.		FORMAT : INSERT value1 value2\n");
+			printf("DELETE		Remove existing row.		FORMAT : DELETE WHERE column1='value'		FORMAT : DELETE *\n");
 			printf("quit		Exit the program.\n\n");
 		}
 		
@@ -62,7 +63,15 @@ void executeCLI() {
 			}
 			else {
 				liste_personnes = insertNewRow(userInput, liste_personnes);
-				printf("Query OK, 1 row affected\n\n");
+			}
+		}
+		if (strstr(userInput, "DELETE") != NULL) { // Faire un DELETE.
+			int argNb = findCharNumberInString(userInput, ' '); // Récupérer le nombre d'espace dans la requête.
+			if(argNb < 1 || argNb > 2) { // Informer le format de la requête si l'utilisateur ne fournis pas le bon nombre d'argument.
+				printf("DELETE WHERE column1='value'\n\n");
+			}
+			else {
+				liste_personnes = deleteRow(userInput, liste_personnes);
 			}
 		}
 	}

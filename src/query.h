@@ -23,5 +23,6 @@
 /************************************************************************************/
 stc_node *insertNewRow(char *userInput, stc_node *liste_personnes);
 void selectRow(char *userInput, stc_node *liste_personnes);
+stc_node *deleteRow(char *userInput, stc_node *liste_personnes);
 
 #endif

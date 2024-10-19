@@ -37,8 +37,8 @@ stc_node *newNode(int value, char *first_name, char *last_name) {
 	node->primaryKey = value; // Assignation de la clé primaire.
 	node->leftChild = NULL; // Assignation du pointeur à NULL.
 	node->rightChild = NULL; // Assignation du pointeur à NULL.
-	strcat(node->row.first_name, first_name); // Assignation du pointeur first_name.
-	strcat(node->row.last_name, last_name); // Assignation du pointeur last_name.
+	strcpy(node->row.first_name, first_name); // Assignation du pointeur first_name.
+	strcpy(node->row.last_name, last_name); // Assignation du pointeur last_name.
 	return node; // Retourner le pointeur vers le noeud créé.
 }
 
@@ -82,6 +82,19 @@ stc_node *findNodeMinPrimaryKey(stc_node *root) {
 		return findNodeMinPrimaryKey(root->leftChild); //... rechercher à nouveau le noeud ayant la plus petit clé...
 	}
 	return root; // Retourner le noeud le plus petit.
+}
+
+/**********************************************/
+/* Chercher le noeud ayant la plus grande clé */
+/**********************************************/
+stc_node *findNodeMaxPrimaryKey(stc_node *root) {
+	if (root == NULL) { // S'IL y a aucun noeud...
+		return NULL;
+	}
+	else if (root->rightChild != NULL) { // SINON SI, il y a un noeud enfant droit...
+		return findNodeMaxPrimaryKey(root->rightChild); //... rechercher à nouveau le noeud ayant la plus grande clé...
+	}
+	return root; // Retourner le noeud le plus grand.
 }
  
 /******************************************/
@@ -152,7 +165,7 @@ void preOrderPrint(stc_node *root)
 }
 
 /******************************/
-/****** Afficher l'arbre *****/
+/****** Compter les noeuds ****/
 /******************************/
 int countNodes(stc_node *root)
 {
