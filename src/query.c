@@ -179,7 +179,7 @@ stc_node *deleteRow(char *userInput, stc_node *liste_personnes) {
 				}
 			}
 		}
-		printf("Query OK, %d row(s) affected.\n\n", rowDeletedNb);
+		printf("\nQuery OK, %d row(s) affected.\n\n", rowDeletedNb);
 		return liste_personnes;
 	}
 	else {

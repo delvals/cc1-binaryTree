@@ -11,6 +11,7 @@
 #include "btree.h"
 #include "query.h"
 #include "avl.h"
+#include "save.h"
 
 
 /************************************************************************************/
@@ -26,23 +27,41 @@ void executeCLI() {
 	
 	/***** Fonctions *****/
 	clearScreen(); // Effacer la console.
-	printf("Use '?' to display available commands.\n\n"); // Afficher le message d'aide.
+	printf("\nDo you want to load data from file ? ");
+	printf("\n\nType 'yes' or press Enter : ");
+	readString(userInput, 200); // Récupérer la saisi utilisateur.
+	if (strcmp(userInput, "yes") == 0) {
+		printf("\n");
+		liste_personnes = loadData(liste_personnes); // Charger les données.
+	}
+	
+	printf("\nUse '?' to display available commands.\n\n"); // Afficher le message d'aide.
 	
 	while (1) { // Boucle infini.
-	printf("binaryTree > "); // Prompt.
+		printf("binaryTree > "); // Prompt.
 		readString(userInput, 200); // Récupérer la saisi utilisateur.
 		
 		if (strcmp(userInput, "?") == 0) { // Afficher les commandes disponibles.
 			printf("\n?		Display available commands.\n");
 			printf("clear		Clear the console.\n");
+			printf("save		Save data to file.\n");
+			printf("load		Load data from file.\n");
+			printf("reset		Reset all data.\n");
+			printf("show tree	Display the binary tree.\n");
+			printf("quit		Exit the program.\n");
 			printf("SELECT		Display existing row.		FORMAT : SELECT column1 column2 column3		FORMAT : SELECT *\n");
 			printf("INSERT		Insert a new row.		FORMAT : INSERT value1 value2\n");
-			printf("DELETE		Remove existing row.		FORMAT : DELETE WHERE column1='value'		FORMAT : DELETE *\n");
-			printf("SHOW TREE	Display the binary tree.	FORMAT : SHOW TREE\n");
-			printf("quit		Exit the program.\n\n");
+			printf("DELETE		Remove existing row.		FORMAT : DELETE WHERE column1='value'		FORMAT : DELETE *\n\n");
 		}
-		
 		if (strcmp(userInput, "quit") == 0) { // Quitter
+			printf("\nDo you want to save data to file ? ");
+			printf("\n\nType 'yes' or press Enter : ");
+			readString(userInput, 200); // Récupérer la saisi utilisateur.
+			if (strcmp(userInput, "yes") == 0) {
+				printf("\n");
+				saveData(liste_personnes);
+			}
+			
 			freeTree(liste_personnes); // Libérer la mémoire allouer pour l'arbre.
 			exit(EXIT_SUCCESS);
 		}
@@ -76,9 +95,27 @@ void executeCLI() {
 				liste_personnes = deleteRow(userInput, liste_personnes);
 			}
 		}
-		if (strstr(userInput, "SHOW TREE") != NULL) { // Affiche l'arbre.
+		if (strcmp(userInput, "show tree") == 0) { // Affiche l'arbre.
 			printf("\n");
 			preOrderPrint(liste_personnes);
+			printf("\n\n");
+		}
+		if (strcmp(userInput, "save") == 0) { // Sauvegarder les données.
+			printf("\n");
+			saveData(liste_personnes);
+			printf("\n\n");
+		}
+		if (strcmp(userInput, "reset") == 0) { // Sauvegarder les données.
+			printf("\n");
+			freeTree(liste_personnes); // Libérer la mémoire allouer pour l'arbre.
+			liste_personnes = NULL; // Réassigner la racine.
+			printf("\n\n");
+		}
+		if (strcmp(userInput, "load") == 0) { // Sauvegarder les données.
+			printf("\n");
+			freeTree(liste_personnes); // Libérer la mémoire allouer pour l'arbre.
+			liste_personnes = NULL; // Réassigner la racine.
+			liste_personnes = loadData(liste_personnes); // Charger les données.
 			printf("\n\n");
 		}
 	}
