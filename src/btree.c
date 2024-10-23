@@ -32,7 +32,7 @@ stc_node *searchNodeViaPrimaryKey(stc_node *root, int targetNodePrimaryKey) {
 stc_node *newNode(int value, char *first_name, char *last_name) {
 	stc_node *node = malloc(sizeof(stc_node)); // Allocation de mémoire.
 	if (NULL == node) {
-		printf("Erreur d'allocation de mémoire");
+		printf("Memory allocation failure occured !");
 		exit(EXIT_FAILURE);
 	}
 	node->primaryKey = value; // Assignation de la clé primaire.
@@ -156,9 +156,33 @@ void freeTree(stc_node *root) {
 	free(root); // Libérer le noeud actuel.
 }
 
+/*****************************/
+/****** Afficher l'arbre *****/
+/*****************************/
+
+void *showTree(char *userInput, stc_node *root) {
+	/* Variables */
+	int tableSize = countNodes(root);
+	
+	/* Fonctions */
+	if (tableSize != 0) { // SI l'arbre n'est pas vide...
+		if (strstr(userInput, "preorder") != NULL) { //...SI l'utilisateur à choisi de parcourir l'abre en preOrder...
+			preOrderPrint(root);
+		}
+		else { // SINON, SI l'utilisateur n'a pas saisi d'argument valide...
+			printf("Missing the expected argument.\n\n");
+			printf("FORMAT : showtree type				TYPES : preorder");
+		}
+	}
+	else { //...SINON, SI l'arbre est vide...
+		printf("Tree is empty !");
+	}
+}
+
 /*******************************************************************/
 /****** Afficher l'arbre en preOrder (Racine - Gauche - Droite) ****/
 /*******************************************************************/
+
 void preOrderPrint(stc_node *root)
 {
     if (NULL != root) {

@@ -54,6 +54,7 @@ void selectRow(char *userInput, stc_node *liste_personnes) {
 	bool argumentPrimaryKey = false;
 	bool argument_first_name = false;
 	bool argument_last_name = false;
+	
 	/***** Analyse de la requète SQL et afficher l'en-tête *****/
 	if (strstr(userInput, "*") != NULL) { // SI l'utilisateur à choisi d'afficher toutes les collones...
 		argumentAll = true; // Rendre vrai le boolean qui affichera les résultats.
@@ -73,8 +74,14 @@ void selectRow(char *userInput, stc_node *liste_personnes) {
 		if (strstr(userInput, "last_name") != NULL) {
 			argument_last_name = true; // Rendre vrai le boolean qui affichera les résultats.
 			printf("	last_name	"); // Afficher l'en-tête.
-		} 
+		}
 		printf("\n\n");
+	}
+	/***** Verification saisi utilisateur *****/
+	if (false == argumentAll && false == argumentPrimaryKey && false == argument_first_name && false == argument_last_name) {
+		printf("\nOption are not recognized !\n\n");
+		printf("\nOPTIONS : '*' 'primaryKey' 'first_name' 'last_name'\n\n");
+		return;
 	}
 	/***** Afficher les résultats *****/
 	if (tableSize != 0) { // On verifie qu'il y a au moins une ligne SQL.
@@ -102,8 +109,7 @@ void selectRow(char *userInput, stc_node *liste_personnes) {
 			}
 		}
 	}
-	printf("\n%d row(s) in set\n", rowSelectedNb);
-	printf("\n");
+	printf("\n%d row(s) in set\n\n", rowSelectedNb);
 }
 
 /********************************/
@@ -183,7 +189,7 @@ stc_node *deleteRow(char *userInput, stc_node *liste_personnes) {
 		return liste_personnes;
 	}
 	else {
-		printf("\nTable is empty.\n");
+		printf("\nTable is empty !\n");
 		printf("Query OK, 0 row affected.\n\n");
 	}
 	return liste_personnes;

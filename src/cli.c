@@ -31,14 +31,15 @@ void executeCLI() {
 	printf("\n\nType 'yes' or press Enter : ");
 	readString(userInput, 200); // Récupérer la saisi utilisateur.
 	if (strcmp(userInput, "yes") == 0) {
-		printf("\n");
 		liste_personnes = loadData(liste_personnes); // Charger les données.
 	}
 	
-	printf("\nUse '?' to display available commands.\n\n"); // Afficher le message d'aide.
+	printf("Use '?' to display available commands.\n\n"); // Afficher le message d'aide.
 	
 	while (1) { // Boucle infini.
+		printf("\033[0;36m");
 		printf("binaryTree > "); // Prompt.
+		printf("\033[0m");
 		readString(userInput, 200); // Récupérer la saisi utilisateur.
 		
 		if (strcmp(userInput, "?") == 0) { // Afficher les commandes disponibles.
@@ -46,14 +47,14 @@ void executeCLI() {
 			printf("clear		Clear the console.\n");
 			printf("save		Save data to file.\n");
 			printf("load		Load data from file.\n");
-			printf("reset		Reset all data.\n");
-			printf("show tree	Display the binary tree.\n");
+			printf("reset		Reset all data in RAM.\n");
+			printf("showtree	Display the binary tree.	FORMAT : showtree type				TYPES : preorder\n");
 			printf("quit		Exit the program.\n");
 			printf("SELECT		Display existing row.		FORMAT : SELECT column1 column2 column3		FORMAT : SELECT *\n");
 			printf("INSERT		Insert a new row.		FORMAT : INSERT value1 value2\n");
 			printf("DELETE		Remove existing row.		FORMAT : DELETE WHERE column1='value'		FORMAT : DELETE *\n\n");
 		}
-		if (strcmp(userInput, "quit") == 0) { // Quitter
+		else if (strcmp(userInput, "quit") == 0) { // Quitter
 			printf("\nDo you want to save data to file ? ");
 			printf("\n\nType 'yes' or press Enter : ");
 			readString(userInput, 200); // Récupérer la saisi utilisateur.
@@ -65,10 +66,10 @@ void executeCLI() {
 			freeTree(liste_personnes); // Libérer la mémoire allouer pour l'arbre.
 			exit(EXIT_SUCCESS);
 		}
-		if (strcmp(userInput, "clear") == 0) { // Effacer la console.
+		else if (strcmp(userInput, "clear") == 0) { // Effacer la console.
 			clearScreen();
 		}
-		if (strstr(userInput, "SELECT") != NULL) { // Faire un SELECT.
+		else if (strstr(userInput, "SELECT") != NULL) { // Faire un SELECT.
 			int argNb = findCharNumberInString(userInput, ' '); // Récupérer le nombre d'espace dans la requête.
 			if(argNb < 1 || argNb > 3) { // Informer le format de la requête SI l'utilisateur ne fournis pas le bon nombre d'argument.
 				printf("\nFORMAT :	SELECT colonnes\n\n");
@@ -77,7 +78,7 @@ void executeCLI() {
 				selectRow(userInput, liste_personnes);
 			}
 		}
-		if (strstr(userInput, "INSERT") != NULL) { // Faire un INSERT.
+		else if (strstr(userInput, "INSERT") != NULL) { // Faire un INSERT.
 			int argNb = findCharNumberInString(userInput, ' '); // Récupérer le nombre d'espace dans la requête.
 			if(argNb != 2) { // Informer le format de la requête si l'utilisateur ne fournis pas le bon nombre d'argument.
 				printf("\nFORMAT :	INSERT prenom nom\n\n");
@@ -86,7 +87,7 @@ void executeCLI() {
 				liste_personnes = insertNewRow(userInput, liste_personnes);
 			}
 		}
-		if (strstr(userInput, "DELETE") != NULL) { // Faire un DELETE.
+		else if (strstr(userInput, "DELETE") != NULL) { // Faire un DELETE.
 			int argNb = findCharNumberInString(userInput, ' '); // Récupérer le nombre d'espace dans la requête.
 			if(argNb < 1 || argNb > 2) { // Informer le format de la requête si l'utilisateur ne fournis pas le bon nombre d'argument.
 				printf("\nDELETE WHERE column1='value'\n\n");
@@ -95,28 +96,30 @@ void executeCLI() {
 				liste_personnes = deleteRow(userInput, liste_personnes);
 			}
 		}
-		if (strcmp(userInput, "show tree") == 0) { // Affiche l'arbre.
+		else if (strstr(userInput, "showtree") != NULL) { // Affiche l'arbre.
 			printf("\n");
-			preOrderPrint(liste_personnes);
+			showTree(userInput, liste_personnes);
 			printf("\n\n");
 		}
-		if (strcmp(userInput, "save") == 0) { // Sauvegarder les données.
+		else if (strcmp(userInput, "save") == 0) { // Sauvegarder les données.
 			printf("\n");
 			saveData(liste_personnes);
 			printf("\n\n");
 		}
-		if (strcmp(userInput, "reset") == 0) { // Sauvegarder les données.
+		else if (strcmp(userInput, "reset") == 0) { // Sauvegarder les données.
 			printf("\n");
 			freeTree(liste_personnes); // Libérer la mémoire allouer pour l'arbre.
 			liste_personnes = NULL; // Réassigner la racine.
-			printf("\n\n");
+			printf("Data has been reset in RAM !\n\n");
+			printf("Saving file is unchanged.\n\n");
 		}
-		if (strcmp(userInput, "load") == 0) { // Sauvegarder les données.
-			printf("\n");
+		else if (strcmp(userInput, "load") == 0) { // Sauvegarder les données.
 			freeTree(liste_personnes); // Libérer la mémoire allouer pour l'arbre.
 			liste_personnes = NULL; // Réassigner la racine.
 			liste_personnes = loadData(liste_personnes); // Charger les données.
-			printf("\n\n");
+		}
+		else {
+			printf("\nUnknown command.\n\n");
 		}
 	}
 }
