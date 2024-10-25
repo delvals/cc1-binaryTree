@@ -13,9 +13,9 @@
 /************************************* Fonctions ************************************/
 /************************************************************************************/
 
-/******************************************/
+/*****************************************/
 /* Chercher un noeud via sa clé primaire */
-/******************************************/
+/*****************************************/
 stc_node *searchNodeViaPrimaryKey(stc_node *root, int targetNodePrimaryKey) {
 	if (NULL == root || targetNodePrimaryKey == root->primaryKey) { // SI l'arbre n'a pas de noeud OU que la racine est la cible...
 		return root; // ...retourner la racine.
@@ -165,9 +165,16 @@ void *showTree(char *userInput, stc_node *root) {
 	int tableSize = countNodes(root);
 	
 	/* Fonctions */
+	printf("\n");
 	if (tableSize != 0) { // SI l'arbre n'est pas vide...
 		if (strstr(userInput, "preorder") != NULL) { //...SI l'utilisateur à choisi de parcourir l'abre en preOrder...
 			preOrderPrint(root);
+		}
+		else if (strstr(userInput, "inorder") != NULL) { //...SI l'utilisateur à choisi de parcourir l'abre en inOrder...
+			inOrderPrint(root);
+		}
+		else if (strstr(userInput, "postorder") != NULL) { //...SI l'utilisateur à choisi de parcourir l'abre en postOrder...
+			postOrderPrint(root);
 		}
 		else { // SINON, SI l'utilisateur n'a pas saisi d'argument valide...
 			printf("Missing the expected argument.\n\n");
@@ -177,6 +184,7 @@ void *showTree(char *userInput, stc_node *root) {
 	else { //...SINON, SI l'arbre est vide...
 		printf("Tree is empty !");
 	}
+	printf("\n\n");
 }
 
 /*******************************************************************/
@@ -189,6 +197,32 @@ void preOrderPrint(stc_node *root)
         printf(" %d(h:%d) ", root->primaryKey, root->height);
         preOrderPrint(root->leftChild);
         preOrderPrint(root->rightChild);
+    }
+}
+
+/*******************************************************************/
+/****** Afficher l'arbre en inOrder (Gauche - Racine - Droite) ****/
+/*******************************************************************/
+
+void inOrderPrint(stc_node *root)
+{
+    if (NULL != root) {
+        preOrderPrint(root->leftChild);
+        printf(" %d(h:%d) ", root->primaryKey, root->height);
+        preOrderPrint(root->rightChild);
+    }
+}
+
+/*******************************************************************/
+/****** Afficher l'arbre en inOrder (Gauche - Droite - Racine) ****/
+/*******************************************************************/
+
+void postOrderPrint(stc_node *root)
+{
+    if (NULL != root) {
+        preOrderPrint(root->leftChild);
+        preOrderPrint(root->rightChild);
+        printf(" %d(h:%d) ", root->primaryKey, root->height);
     }
 }
 

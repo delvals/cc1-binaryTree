@@ -50,6 +50,8 @@ stc_node *deleteNode(stc_node *root,int toDeleteNodePrimaryKey);
 void freeTree(stc_node *root);
 void *showTree(char *userInput, stc_node *root);
 void preOrderPrint(stc_node *root);
+void inOrderPrint(stc_node *root);
+void postOrderPrint(stc_node *root);
 int countNodes(stc_node *root);
 
 #endif

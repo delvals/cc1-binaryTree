@@ -96,3 +96,24 @@ uint16_t findCharNumberInString(char *string, char searchedChar) {
     	}
     	return charNb;
 }
+
+/**********************************************/
+/***** Ramplacer une chaîne par une autre *****/
+/**********************************************/
+void replaceStringBy(char *string1, char *string2) {
+	if (strlen(string1) < strlen(string2)) { // On vérifie que la chaîne 1 est plus grande que la chaîne 2;
+		printf("ERROR : string2 is longer than string1 in replaceStringBy() !");
+		exit(EXIT_FAILURE);
+	}
+	else {
+		int pos = 0;
+		for(pos = 0; pos < strlen(string1); pos++) { // On rempli la chaîne 1 de 0.
+			string1[pos] = '0';
+		}
+		for(pos = 0; pos < strlen(string2); pos++) { // On rempli la chaîne 1 de 0.
+			string1[pos] = string2[pos];
+		}
+		pos++;
+		string1[pos] = '\0'; // Caractère de fin de chaîne.
+	}
+}

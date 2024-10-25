@@ -11,7 +11,6 @@
 #include "query.h"
 #include "avl.h"
 
-
 /************************************************************************************/
 /************************************* Fonctions ************************************/
 /************************************************************************************/
@@ -20,6 +19,12 @@
 /***** Insérer une nouvelle ligne SQL  *****/
 /*******************************************/
 stc_node *insertNewRow(char *userInput, stc_node *liste_personnes) {
+	/***** Vérificateur *****/
+	int argNb = findCharNumberInString(userInput, ' '); // Récupérer le nombre d'espace dans la requête.
+	if(argNb != 2) { // Informer le format de la requête si l'utilisateur ne fournis pas le bon nombre d'argument.
+		printf("\nFORMAT :	INSERT prenom nom\n\n");
+		return liste_personnes;
+	}
 	/***** Variables *****/
 	int position = 0;
 	uint8_t spaceNb = 0, last_name_position = 0, first_name_position = 0;
@@ -69,11 +74,11 @@ void selectRow(char *userInput, stc_node *liste_personnes) {
 		}
 		if (strstr(userInput, "first_name") != NULL) {
 			argument_first_name = true; // Rendre vrai le boolean qui affichera les résultats.
-			printf("	first_name	|"); // Afficher l'en-tête.
+			printf("		first_name		|"); // Afficher l'en-tête.
 		}
 		if (strstr(userInput, "last_name") != NULL) {
 			argument_last_name = true; // Rendre vrai le boolean qui affichera les résultats.
-			printf("	last_name	"); // Afficher l'en-tête.
+			printf("		last_name		"); // Afficher l'en-tête.
 		}
 		printf("\n\n");
 	}
@@ -116,6 +121,12 @@ void selectRow(char *userInput, stc_node *liste_personnes) {
 /***** Supprimer lignes SQL  ****/
 /********************************/
 stc_node *deleteRow(char *userInput, stc_node *liste_personnes) {
+	/***** Vérificateur *****/
+	int argNb = findCharNumberInString(userInput, ' '); // Récupérer le nombre d'espace dans la requête.
+	if(argNb < 1 || argNb > 2) { // Informer le format de la requête si l'utilisateur ne fournis pas le bon nombre d'argument.
+		printf("\nDELETE WHERE column1='value'\n\n");
+		return liste_personnes;
+	}
 	/***** Variables *****/
 	int tableSize = countNodes(liste_personnes);
 	int nodeCounter = 1, position = 0, rowDeletedNb = 0, conditionPosition = 0, primaryKey = 0;

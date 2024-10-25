@@ -48,7 +48,8 @@ void saveData(stc_node *liste_personnes) {
     	/* Variables */
 	int nodeCounter = 0, tableSize = countNodes(liste_personnes);
 	if (0 != tableSize) { // SI la table n'est pas vide...
-		/* Fichier */
+		/* Fonctions */
+		printf("\n");
 	    	FILE *saveFile = fopen("../save/save.txt", "w+"); // Ouverture du fichier de sauvegarde en écriture avec supression des données existantes.
 	    	if(NULL == saveFile) { // SI l'ouverture du fichier à échouée...
 	    		printf("The saving file could not be opened !\n");
@@ -68,6 +69,20 @@ void saveData(stc_node *liste_personnes) {
 		printf("Data saved !");
 	}
 	else { // SINON, SI la table est vide...
-		printf("Table is empty !");
+		printf("\nTable is empty !");
+		printf("\n\nDo you want to reset the save file ? ");
+		printf("\n\nType 'yes' or press Enter : ");
+		char userInput[200];
+		readString(userInput, 200); // Récupérer la saisi utilisateur.
+		if (strcmp(userInput, "yes") == 0) {
+		    	FILE *saveFile = fopen("../save/save.txt", "w+"); // Ouverture du fichier de sauvegarde en écriture avec supression des données existantes.
+		    	if(NULL == saveFile) { // SI l'ouverture du fichier à échouée...
+		    		printf("The saving file could not be opened !\n");
+		    	}
+		    	else { // SINON, SI l'ouverture du fichier à réussi...
+		    		fprintf(saveFile, "");
+		    	}
+		}
 	}
+	printf("\n");
 }
