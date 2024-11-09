@@ -17,5 +17,6 @@
 
 stc_node *loadData(stc_node *liste_personnes);
 void saveData(stc_node *liste_personnes);
+void createSaveDirectory();
 
 #endif

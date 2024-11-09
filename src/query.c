@@ -7,9 +7,9 @@
 #include <stdint.h>
 #include <string.h>
 #include <stdbool.h>
-#include "btree.h"
-#include "query.h"
-#include "avl.h"
+#include "include/btree.h"
+#include "include/query.h"
+#include "include/avl.h"
 
 /************************************************************************************/
 /************************************* Fonctions ************************************/

@@ -6,8 +6,8 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
-#include "btree.h"
-#include "avl.h"
+#include "include/btree.h"
+#include "include/avl.h"
 
 /************************************************************************************/
 /************************************* Fonctions ************************************/

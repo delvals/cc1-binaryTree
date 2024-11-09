@@ -6,9 +6,12 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
-#include "common.h"
-#include "save.h"
-#include "btree.h"
+#include <dirent.h>
+#include <sys/stat.h>
+#include <errno.h>
+#include "include/common.h"
+#include "include/save.h"
+#include "include/btree.h"
 
 /************************************************************************************/
 /************************************* Fonctions ************************************/
@@ -25,7 +28,7 @@ stc_node *loadData(stc_node *liste_personnes) {
 	
 	/* Fonctions */
 	printf("\n");
-    	FILE *saveFile = fopen("../save/save.txt", "r"); // Ouverture du fichier en lecture seule.
+    	FILE *saveFile = fopen("save/save.txt", "r"); // Ouverture du fichier en lecture seule.
     	if(NULL == saveFile) { // SI l'ouverture du fichier à échouée...
     		printf("The saving file could not be opened or does not exist !\n\n");
     		return liste_personnes;
@@ -50,7 +53,7 @@ void saveData(stc_node *liste_personnes) {
 	if (0 != tableSize) { // SI la table n'est pas vide...
 		/* Fonctions */
 		printf("\n");
-	    	FILE *saveFile = fopen("../save/save.txt", "w+"); // Ouverture du fichier de sauvegarde en écriture avec supression des données existantes.
+	    	FILE *saveFile = fopen("save/save.txt", "w+"); // Ouverture du fichier de sauvegarde en écriture avec supression des données existantes.
 	    	if(NULL == saveFile) { // SI l'ouverture du fichier à échouée...
 	    		printf("The saving file could not be opened !\n");
 	    	}
@@ -64,9 +67,9 @@ void saveData(stc_node *liste_personnes) {
 					fprintf(saveFile, "%d %s %s\n", currentNode->primaryKey, currentNode->row.first_name, currentNode->row.last_name);
 				}
 			}
+			fclose(saveFile); // Fermeture du fichier de sauvegarde.
+			printf("Data saved !");
 	    	}
-		fclose(saveFile); // Fermeture du fichier de sauvegarde.
-		printf("Data saved !");
 	}
 	else { // SINON, SI la table est vide...
 		printf("\nTable is empty !");
@@ -75,7 +78,7 @@ void saveData(stc_node *liste_personnes) {
 		char userInput[200];
 		readString(userInput, 200); // Récupérer la saisi utilisateur.
 		if (strcmp(userInput, "yes") == 0) {
-		    	FILE *saveFile = fopen("../save/save.txt", "w+"); // Ouverture du fichier de sauvegarde en écriture avec supression des données existantes.
+		    	FILE *saveFile = fopen("save/save.txt", "w+"); // Ouverture du fichier de sauvegarde en écriture avec supression des données existantes.
 		    	if(NULL == saveFile) { // SI l'ouverture du fichier à échouée...
 		    		printf("The saving file could not be opened !\n");
 		    	}
@@ -86,3 +89,30 @@ void saveData(stc_node *liste_personnes) {
 	}
 	printf("\n");
 }
+
+/****************************************/
+/* Création du répertoire de sauvegarde */
+/****************************************/
+void createSaveDirectory() {
+	DIR* dir = opendir("save");
+	if (dir) { // SI le répertoire existe déjà...
+		FILE *saveFile = fopen("save/save.txt", "r"); // Ouverture du fichier en lecture seule.
+	    	if(NULL == saveFile) { // SI l'ouverture du fichier à échouée...
+	    		FILE *saveFileToCreate;
+			saveFileToCreate = fopen("save/save.txt", "w"); //...créer le fichier.
+			fclose(saveFileToCreate);
+	    	}
+	    	fclose(saveFile);
+	    	closedir(dir); //...fermer le répertoire.
+	}
+	else if (ENOENT == errno) { // SINON, SI le répertoire n'éxiste pas...
+		mkdir("save", 0700);
+		FILE *saveFileToCreate;
+		saveFileToCreate = fopen("save/save.txt", "w"); //...créer le fichier.
+		fclose(saveFileToCreate);
+	}
+	else { // SI la fonction échoue...
+    		printf("Function createDirectory failed !");
+		exit(EXIT_FAILURE);
+	}
+ }

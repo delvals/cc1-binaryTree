@@ -6,12 +6,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
-#include "common.h"
-#include "cli.h"
-#include "btree.h"
-#include "query.h"
-#include "avl.h"
-#include "save.h"
+#include "include/common.h"
+#include "include/cli.h"
+#include "include/btree.h"
+#include "include/query.h"
+#include "include/avl.h"
+#include "include/save.h"
 
 /************************************************************************************/
 /************************************ Prototypes ************************************/

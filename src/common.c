@@ -23,7 +23,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
-#include "common.h"
+#include "include/common.h"
 
 /************************************************************************************/
 /************************************* Fonctions ************************************/
