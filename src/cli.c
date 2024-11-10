@@ -58,7 +58,7 @@ void executeCLI() {
 			printf("save		Save data to file.\n");
 			printf("load		Load data from file.\n");
 			printf("reset		Reset all data in RAM.\n");
-			printf("showtree	Display the binary tree.			FORMAT : showtree <type>					TYPES : preorder, inorder, preorder\n");
+			printf("showtree	Display the binary tree.			FORMAT : showtree <type>					TYPES : preorder, inorder, postorder\n");
 			printf("color		Change color of prompt.				FORMAT : color <color>						COLORS : cyan, red, green\n");
 			printf("quit		Exit the program.\n");
 			printf("SELECT		Display specific column(s) of the table.	FORMAT : SELECT <column1> <column2> <column3>...		COLUMNS : *, primaryKey, first_name, last_name\n");
